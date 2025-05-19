@@ -1,8 +1,18 @@
 <%@ page contentType="text/html; charset=utf-8" language="java" import="modelo.UsuarioDAO" %>
 <%@ page import="modelo.Usuario" %>
 <%
+    // Verificar si existe una sesión válida (no crear una nueva)
+    HttpSession sesion = request.getSession(false);
+    
+    // Verificar si el usuario está autenticado
+    if (sesion == null || sesion.getAttribute("nUsuario") == null) {
+        // Redirigir a la página de inicio si no hay sesión o usuario
+        response.sendRedirect("index.jsp?mensaje=" + java.net.URLEncoder.encode("Debe iniciar sesión para acceder a esta página", "UTF-8"));
+        return; // Importante para detener la ejecución del resto del JSP
+    }
+
     // Obtener usuario de sesión para mostrar datos actuales
-    String usuarioSesion = (String) session.getAttribute("nUsuario");
+    String usuarioSesion = (String) sesion.getAttribute("nUsuario");
     UsuarioDAO udao = new UsuarioDAO();
     Usuario usuarioObj = udao.listarDatosPorUsuario(usuarioSesion);
 

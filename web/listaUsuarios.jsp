@@ -2,6 +2,18 @@
 <%@ page import="modelo.Usuario" %>
 <%@ page import="modelo.UsuarioDAO" %>
 
+<%
+    // Verificar si existe una sesiÃ³n vÃ¡lida (no crear una nueva)
+    HttpSession sesion = request.getSession(false);
+    
+    // Verificar si el usuario estÃ¡ autenticado
+    if (sesion == null || sesion.getAttribute("nUsuario") == null) {
+        // Redirigir a la pÃ¡gina de inicio si no hay sesiÃ³n o usuario
+        response.sendRedirect("index.jsp?mensaje=" + java.net.URLEncoder.encode("Debe iniciar sesiÃ³n para acceder a esta pÃ¡gina", "UTF-8"));
+        return; // Importante para detener la ejecuciÃ³n del resto del JSP
+    }
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -30,19 +42,19 @@
 
     <table>
         <tr>
-            <th>Identificación</th>
+            <th>Identificaciï¿½n</th>
             <th>Nombres</th>
             <th>Apellidos</th>
             <th>E-mail</th>
             <th>Usuario</th>
-            <th>Contraseña</th>
+            <th>Contraseï¿½a</th>
             <th>Perfil</th>
-            <th>Acción</th>
+            <th>Acciï¿½n</th>
         </tr>
 
         <%
             UsuarioDAO udao = new UsuarioDAO();
-            List<Usuario> lista = udao.listadoUsuarios(); // Asegúrate de usar el nombre correcto
+            List<Usuario> lista = udao.listadoUsuarios(); // Asegï¿½rate de usar el nombre correcto
 
             if (lista.isEmpty()) { 
         %>
@@ -57,7 +69,7 @@
             <td><%=a.getApellido()%></td>
             <td><%=a.getEmail()%></td>
             <td><%=a.getUsuario()%></td>
-            <td>******</td> <!-- Seguridad: no mostrar la contraseña -->
+            <td>******</td> <!-- Seguridad: no mostrar la contraseï¿½a -->
             <td><%=a.getIdperfil()%></td>
             <td>
                 <a href="EditarUsuario.jsp?id=<%=a.getIddato()%>">Editar</a>

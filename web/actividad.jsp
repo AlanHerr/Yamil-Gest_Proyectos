@@ -2,6 +2,18 @@
 <%@ page import="java.sql.*" %>
 <%@ page import="modelo.Conexion" %>
 
+<%
+    // Verificar si existe una sesión válida (no crear una nueva)
+    HttpSession sesion = request.getSession(false);
+    
+    // Verificar si el usuario está autenticado
+    if (sesion == null || sesion.getAttribute("nUsuario") == null) {
+        // Redirigir a la página de inicio si no hay sesión o usuario
+        response.sendRedirect("index.jsp?mensaje=" + java.net.URLEncoder.encode("Debe iniciar sesión para acceder a esta página", "UTF-8"));
+        return; // Importante para detener la ejecución del resto del JSP
+    }
+%>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>

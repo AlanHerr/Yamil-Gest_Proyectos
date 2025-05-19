@@ -16,32 +16,23 @@
             <http-only>true</http-only>
         </cookie-config>
         <tracking-mode>COOKIE</tracking-mode>
-    </session-config>
-    
-    <!-- Registro del filtro de sesión -->
+    </session-config>    <!-- Registro del filtro de sesión -->
     <filter>
         <filter-name>SessionFilter</filter-name>
         <filter-class>filtros.SessionFilter</filter-class>
-    </filter>    <filter-mapping>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+    
+    <!-- Mapeo de filtro: Aplica a todas las URLs -->
+    <filter-mapping>
         <filter-name>SessionFilter</filter-name>
-        <!-- Páginas JSP protegidas -->
-        <url-pattern>/cpanel.jsp</url-pattern>
-        <url-pattern>/actividad.jsp</url-pattern>
-        <url-pattern>/administrarTareas.jsp</url-pattern>
-        <url-pattern>/asignarTarea.jsp</url-pattern>
-        <url-pattern>/editarPerfil.jsp</url-pattern>
-        <url-pattern>/EditarUsuario.jsp</url-pattern>
-        <url-pattern>/eliminarActividad.jsp</url-pattern>
-        <url-pattern>/listaUsuarios.jsp</url-pattern>
-        <url-pattern>/verPerfil.jsp</url-pattern>
-        <!-- Servlets protegidos -->
-        <url-pattern>/eliminarTarea</url-pattern>
-        <url-pattern>/marcarTarea</url-pattern>
-        <url-pattern>/agregarActividad</url-pattern>
-        <url-pattern>/ControladorUsuario</url-pattern>
-        <url-pattern>/EditarPerfil</url-pattern>
-        <url-pattern>/EditarUsuario</url-pattern>
-        <url-pattern>/EliminarUsuario</url-pattern>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
     </filter-mapping>
     
     <!-- Registro del listener de sesión -->
