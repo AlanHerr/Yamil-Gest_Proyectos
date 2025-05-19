@@ -34,14 +34,20 @@ public class CerrarSesion extends HttpServlet {
                 
                 // Invalidar la sesión actual
                 sesionCli.invalidate();
-                
-                // Registrar el cierre de sesión (para depuración)
+                  // Registrar el cierre de sesión (para depuración)
                 if (nombreUsuario != null) {
                     logger.log(Level.INFO, "Usuario ''{0}'' ha cerrado sesión", nombreUsuario);
                 }
                 
-                // Redirigir al usuario a través de un mensaje de confirmación
-                response.sendRedirect("mensaje.jsp?titulo=Sesión+Finalizada&mensaje=Has+cerrado+sesión+correctamente.+¡Hasta+pronto!&tipo=info&redireccion=index.jsp");
+                // En lugar de redirigir con parámetros, vamos a usar
+                // un enfoque más seguro utilizando atributos de solicitud
+                request.setAttribute("titulo", "Sesión Finalizada");
+                request.setAttribute("mensaje", "Has cerrado sesión correctamente. ¡Hasta pronto!");
+                request.setAttribute("tipo", "info");
+                request.setAttribute("redireccion", "index.jsp");
+                
+                // Forward a la página de mensaje
+                request.getRequestDispatcher("mensaje.jsp").forward(request, response);
                 return;
             }
             // Redirigir al usuario a la página de login (index.jsp)

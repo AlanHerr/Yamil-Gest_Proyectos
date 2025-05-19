@@ -6,11 +6,27 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8" isErrorPage="true"%>
 <%
-    // Obtenemos variables de la solicitud o parámetros
-    String titulo = request.getParameter("titulo");
-    String mensaje = request.getParameter("mensaje");
-    String tipo = request.getParameter("tipo"); // success, danger, warning, info
-    String redireccion = request.getParameter("redireccion");
+    // Intentar obtener variables del request attribute (más seguro)
+    // Si no existe, intentar obtener de los parámetros
+    String titulo = (String)request.getAttribute("titulo");
+    if (titulo == null) {
+        titulo = request.getParameter("titulo");
+    }
+    
+    String mensaje = (String)request.getAttribute("mensaje");
+    if (mensaje == null) {
+        mensaje = request.getParameter("mensaje");
+    }
+    
+    String tipo = (String)request.getAttribute("tipo"); // success, danger, warning, info
+    if (tipo == null) {
+        tipo = request.getParameter("tipo");
+    }
+    
+    String redireccion = (String)request.getAttribute("redireccion");
+    if (redireccion == null) {
+        redireccion = request.getParameter("redireccion");
+    }
     
     // Valores por defecto
     if (titulo == null) {
