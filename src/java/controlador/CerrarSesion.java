@@ -1,8 +1,8 @@
-
-package modelo;
+package controlador;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -11,48 +11,45 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 /**
- *
+ * Servlet para manejar el cierre de sesión
  * @author Alanh
  */
 @WebServlet(name = "CerrarSesion", urlPatterns = {"/cerrarSesion"})
 public class CerrarSesion extends HttpServlet {
 
+    private static final Logger logger = Logger.getLogger(CerrarSesion.class.getName());
+    
     // Método para procesar la solicitud de cierre de sesión
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");        try {
+        response.setContentType("text/html;charset=UTF-8");
+
+        try {
             // Recuperar la sesión actual
-            HttpSession sesion_cli = request.getSession(false);  // false significa que no se crea una nueva si no existe
+            HttpSession sesionCli = request.getSession(false);  // false significa que no se crea una nueva si no existe
             
-            if (sesion_cli != null) {
+            if (sesionCli != null) {
                 // Guardar el nombre de usuario para mostrar mensaje
-                String nombreUsuario = (String) sesion_cli.getAttribute("nUsuario");
+                String nombreUsuario = (String) sesionCli.getAttribute("nUsuario");
                 
                 // Invalidar la sesión actual
-                sesion_cli.invalidate();
+                sesionCli.invalidate();
                 
                 // Registrar el cierre de sesión (para depuración)
                 if (nombreUsuario != null) {
-                    System.out.println("Usuario '" + nombreUsuario + "' ha cerrado sesión");
+                    logger.log(Level.INFO, "Usuario ''{0}'' ha cerrado sesión", nombreUsuario);
                 }
                 
-                // Establecer variables para la página de mensaje
-                request.setAttribute("titulo", "Sesión Finalizada");
-                request.setAttribute("mensaje", "Has cerrado sesión correctamente. ¡Hasta pronto!");
-                request.setAttribute("tipo", "info");
-                request.setAttribute("redireccion", "index.jsp");
-                
-                // Redirigir a través de la página de mensaje
-                request.getRequestDispatcher("mensaje.jsp").forward(request, response);
+                // Redirigir al usuario a través de un mensaje de confirmación
+                response.sendRedirect("mensaje.jsp?titulo=Sesión+Finalizada&mensaje=Has+cerrado+sesión+correctamente.+¡Hasta+pronto!&tipo=info&redireccion=index.jsp");
                 return;
             }
             // Redirigir al usuario a la página de login (index.jsp)
             response.sendRedirect("index.jsp");
         } catch (IOException e) {
-            // Si hay un error, establecer un mensaje en la sesión
-            HttpSession ses = request.getSession(true);
-            ses.setAttribute("mensaje", "Session Activa.");
-            ses.setAttribute("exc", e.toString());
+            // Si hay un error, registrar y redirigir
+            logger.log(Level.SEVERE, "Error al cerrar sesión: {0}", e.getMessage());
+            response.sendRedirect("index.jsp?error=true");
         }
     }
 

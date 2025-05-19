@@ -1,4 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+    // Capturar parámetros de error o mensaje
+    String error = request.getParameter("error");
+    String mensaje = request.getParameter("mensaje");
+%>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -81,10 +86,18 @@
         }
     </style>
 </head>
-<body>
-
-    <div class="login-container">
+<body>    <div class="login-container">
         <h2>Formulario de Ingreso</h2>
+        
+        <% if (error != null && error.equals("1")) { %>
+        <div style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center;">
+            <strong>Error:</strong> Usuario o contraseña incorrectos.
+        </div>
+        <% } else if (mensaje != null) { %>
+        <div style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center;">
+            <%= mensaje %>
+        </div>
+        <% } %>
 
         <!-- Formulario de login -->
         <form action="CtrolValidar" method="post">

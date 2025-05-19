@@ -9,10 +9,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 @WebServlet(name = "MarcarTareaRealizada", urlPatterns = {"/marcarTarea"})
-public class MarcarTareaRealizada extends HttpServlet {
-
-    @Override
+public class MarcarTareaRealizada extends HttpServlet {    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Verificar que exista una sesión activa
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("nUsuario") == null) {
+            response.sendRedirect("index.jsp");
+            return;
+        }
+        
         String idgesActividadStr = request.getParameter("idgesActividad");
         if (idgesActividadStr == null || idgesActividadStr.isEmpty()) {
             response.sendRedirect("cpanel.jsp");

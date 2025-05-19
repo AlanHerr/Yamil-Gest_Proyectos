@@ -9,24 +9,33 @@ import jakarta.servlet.http.HttpServletResponse;
 import modelo.GesActividadDAO;
 
 @WebServlet(name = "EliminarTarea", urlPatterns = {"/eliminarTarea"})
-public class EliminarTarea extends HttpServlet {
-
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+public class EliminarTarea extends HttpServlet {    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
-        int idgesActividad = Integer.parseInt(request.getParameter("idgesActividad"));
-
-        // Crear instancia del DAO de GesActividad
-        GesActividadDAO gesActividadDAO = new GesActividadDAO();
+        // Verificar que exista una sesión activa
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("nUsuario") == null) {
+            response.sendRedirect("index.jsp");
+            return;
+        }
         
-        // Eliminar la tarea
-        int status = gesActividadDAO.eliminarTarea(idgesActividad);
+        try {
+            int idgesActividad = Integer.parseInt(request.getParameter("idgesActividad"));
 
-        if (status > 0) {
-            response.sendRedirect("cpanel.jsp");  // Redirigir al panel de control
-        } else {
-            response.sendRedirect("error.jsp");  // En caso de error, redirigir a error.jsp
+            // Crear instancia del DAO de GesActividad
+            GesActividadDAO gesActividadDAO = new GesActividadDAO();
+            
+            // Eliminar la tarea
+            int status = gesActividadDAO.eliminarTarea(idgesActividad);
+
+            if (status > 0) {
+                response.sendRedirect("cpanel.jsp");  // Redirigir al panel de control
+            } else {
+                response.sendRedirect("mensaje.jsp?titulo=Error&mensaje=No+se+pudo+eliminar+la+tarea&tipo=danger&redireccion=cpanel.jsp");
+            }
+        } catch (NumberFormatException e) {
+            response.sendRedirect("mensaje.jsp?titulo=Error&mensaje=ID+de+tarea+inválido&tipo=danger&redireccion=cpanel.jsp");
         }
     }
 

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
+         version="5.0">
+    
+    <!-- Información básica de la aplicación -->
+    <display-name>Sistema de Gestión de Proyectos</display-name>
+    <description>Aplicación para gestionar proyectos y asignar tareas</description>
+    
+    <!-- Configuración de sesión -->
+    <session-config>
+        <!-- Tiempo máximo de inactividad en minutos -->
+        <session-timeout>30</session-timeout>
+        <cookie-config>
+            <http-only>true</http-only>
+        </cookie-config>
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
+    
+    <!-- Registro del filtro de sesión -->
+    <filter>
+        <filter-name>SessionFilter</filter-name>
+        <filter-class>filtros.SessionFilter</filter-class>
+    </filter>    <filter-mapping>
+        <filter-name>SessionFilter</filter-name>
+        <!-- Páginas JSP protegidas -->
+        <url-pattern>/cpanel.jsp</url-pattern>
+        <url-pattern>/actividad.jsp</url-pattern>
+        <url-pattern>/administrarTareas.jsp</url-pattern>
+        <url-pattern>/asignarTarea.jsp</url-pattern>
+        <url-pattern>/editarPerfil.jsp</url-pattern>
+        <url-pattern>/EditarUsuario.jsp</url-pattern>
+        <url-pattern>/eliminarActividad.jsp</url-pattern>
+        <url-pattern>/listaUsuarios.jsp</url-pattern>
+        <url-pattern>/verPerfil.jsp</url-pattern>
+        <!-- Servlets protegidos -->
+        <url-pattern>/eliminarTarea</url-pattern>
+        <url-pattern>/marcarTarea</url-pattern>
+        <url-pattern>/agregarActividad</url-pattern>
+        <url-pattern>/ControladorUsuario</url-pattern>
+        <url-pattern>/EditarPerfil</url-pattern>
+        <url-pattern>/EditarUsuario</url-pattern>
+        <url-pattern>/EliminarUsuario</url-pattern>
+    </filter-mapping>
+    
+    <!-- Registro del listener de sesión -->
+    <listener>
+        <listener-class>listeners.SessionListener</listener-class>
+    </listener>
+    
+    <!-- Página de inicio de la aplicación -->
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+    
+    <!-- Configuración de errores -->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/mensaje.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/mensaje.jsp</location>
+    </error-page>
+    
+</web-app>

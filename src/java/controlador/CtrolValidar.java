@@ -28,15 +28,25 @@ public class CtrolValidar extends HttpServlet {
             String cla = request.getParameter("cclave");
 
             // Validar el login contra la base de datos
-            datos = logindao.Login_datos(usu, cla);
-
-            if (datos != null && datos.getUsuario() != null) {
+            datos = logindao.Login_datos(usu, cla);            if (datos != null && datos.getUsuario() != null) {
                 // Guardar el nombre de usuario en sesión
                 sesion_cli.setAttribute("nUsuario", datos.getUsuario());
 
-                // 🔥 NUEVO: Guardar el idusu del usuario logueado
-                sesion_cli.setAttribute("idUsuario", datos.getIddato()); // o getIdusu()
+                // Guardar el idusu del usuario logueado
+                sesion_cli.setAttribute("idUsuario", datos.getIdusu());
+                
+                // Guardar el perfil del usuario
+                sesion_cli.setAttribute("idPerfil", datos.getIdperfil());
+                
+                // Guardar el nombre y apellido para mostrar
+                sesion_cli.setAttribute("nombreCompleto", datos.getNombre() + " " + datos.getApellido());
+                
+                // Establecer tiempo de inactividad máximo (30 minutos)
+                sesion_cli.setMaxInactiveInterval(30 * 60);
 
+                // Registrar inicio de sesión
+                System.out.println("Usuario '" + datos.getUsuario() + "' ha iniciado sesión");
+                
                 // Redirigir al panel de control
                 request.getRequestDispatcher("cpanel.jsp").forward(request, response);
             } else {
